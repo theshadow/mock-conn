@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type Addr struct {
+type MockAddr struct {
 	net.TCPAddr
 }
 
@@ -48,15 +48,25 @@ func (c *Conn) Close() error {
 	return nil
 }
 
+// Read implements the Conn Read method.
+func (c *Conn) Read(b []byte) (int, error) {
+	return c.Server.Read(b)
+}
+
+// Write implements the Conn Write method.
+func (c *Conn) Write(b []byte) (int, error) {
+	return c.Server.Write(b)
+}
+
 
 // LocalAddr returns the local network address.
-func (c *Conn) LocalAddr() Addr {
-	return Addr{}
+func (c *Conn) LocalAddr() net.Addr {
+	return &MockAddr{}
 }
 
 // RemoteAddr returns the remote network address.
-func (c *Conn) RemoteAddr() Addr {
-	return Addr{}
+func (c *Conn) RemoteAddr() net.Addr {
+	return &MockAddr{}
 }
 
 // SetDeadline sets the read and write deadlines associated
